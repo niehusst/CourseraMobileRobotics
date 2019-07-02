@@ -1,0 +1,21 @@
+system: something that changes over time (eg. robots, stock markets)
+control: influnce of the changes in systems
+
+__ How to describe a control system __
+state: what the system is CURRENTLY doing (sometimes represented as a variable)
+ex= position or velocity of robo
+
+dynamics: description of change of state as function of time
+ex= possibly acceleration? how robot is moving
+
+reference: what we want the system to do
+ex= set velocity to 60mph
+
+output: measument of some aspects of the system (we can't always measure the state, so output lets us see what happens given certain inputs)
+ex= robot sensor measurments
+
+input: control signal
+ex= velocity, torques, acceleration
+
+feedback: mapping from outputs to inputs (sometimes the difference/error between input and output)
+ex= nada
