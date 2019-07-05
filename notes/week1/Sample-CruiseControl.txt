@@ -1,0 +1,13 @@
+GOAL: make car go desired ref speed r
+
+We must obey the laws of physics; F=ma
+State can simply be represented as velocity.
+Input: gas/brake (u). This can be related as its own equation (that is semi made up) F=cu where c is some unknow transmission signal
+
+We know that the relation in newtons 2nd law that changes over time is acceleration (we assume mass won't change), so we can say 
+xd = a        # simple diff equation describing dx/dt
+m*xd = c*u    # pull in substitution for 2nd law and input
+xd = (c*u)/m  # solve for xd
+
+
+Keeping models simple can make things easier to both inderstand and implement (which tends to work out better in practice)

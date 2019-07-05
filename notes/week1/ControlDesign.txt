@@ -1,0 +1,45 @@
+_______Control design______:
+A controller should be=
+-> stable; control signals arn't swinging wildly (bounded in bounded out) and system doesn't explode
+-> tracking; goal of reference is reached
+-> robustness; deal with some issues/failures; dont depend on unknow varibles/constants
+
+control signal is error level 
+r(goal) - y(measured) = e
+
+properties of contorl signal (high level)=
+Small e should have a small u response (diminishing adjustments, so we dont diverge). 
+u responses shouldn't be jerky 
+u should not depend on knowing non-input variables (eg mass from F=ma)
+
+We want our model to infinitesimally approach target r as t->inf (aka: e = r-x -> 0)
+
+Bang-Bang control:
+u(input) = { u_max   if e>0,
+             -u_max  if e<0,
+             0       if e==0 }
+
+This type of control design may lead to achieving the intended goal (tracking of speed r), however it will lead to the "jerky" contorl signals. bad stability
+
+P-regulator (proportional regulation)=
+u = k*e (for some constant k)
+
+this leads to a stable model, but it is unlikely to achieve the goal, as it will only approach r as t->inf. So tracking is not achieved.
+
+
+PI-regulator (proportional integral reg)
+the integral over the error
+                     /\t
+u(t) = kp*e(t) + k_I |   e(tao)dtao
+                    \/0
+kp is proportional k (similar to k in P-reg)
+k_I is integral gain (coef)
+integral sums up error from start to curr time
+
+
+PID-regulator (proportional integral derivative reg)
+this is most common type of regulator, tracks, stable and robust
+                     /\t
+u(t) = kp*e(t) + k_I |   e(tao)dtao + k_D de(t)/dt
+                    \/0
+adds deriv to term to end to account for deriv gain

@@ -1,0 +1,45 @@
+In a PID controler, you can tweak the 3 gain parameters, k_P, k_I, and k_D.
+
+PURPOSES__
+P: contributes to stability. medium responsivemness. Not usually enough to achieve tracking
+I: Tracking and disturbance rejection. Very good when system is stable. However, it is slower (since needs to gather error over time) and may cause oscillations
+D: Fast responsiveness; quickly changing input value. But it is sensitive to noise in system.
+
+
+PID is very low level. Does not guarantee stability.
+Essentially a feedback loop.
+More complicated robos usually need something more, or a more complex control design?
+
+___ IMPLEMENTATION OF PID ___
+
+                     /\t
+u(t) = kp*e(t) + k_I |   e(tao)dtao + k_D de(t)/dt
+                    \/0
+
+We can approximate these calculus things->
+Deriv -> taylor approx
+de(t)/dt ~= (e_new - e_old) / dt
+
+Integral -> reiman sum
+ /\t
+ |  e(tao)dtao  ~= dt*E
+\/0
+
+
+
+___ CODE ___
+for each time control called:
+  # read in error betweek goal value and actual
+  read e;
+
+  # compute change in e from last loop
+  e_dot = e - e_old;
+
+  # compute new running sum
+  E += e;
+
+  # use approximations
+  u = kP*e + kD*e_dot + kI*E
+
+  # update value for next iteration
+  e_old = e;

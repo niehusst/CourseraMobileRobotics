@@ -1,0 +1,17 @@
+models as abstractions of control
+
+The main question of control theory is how to pick the input signal?
+--- OBJECTIVES: ---
+stability: system doesn't fail
+tracking: following reference signals
+robustness: ability to handle messy/unexpected signals
+disturbance rejection: ability to deal with sudden environment/input change
+optimality: how to get best performance (best subjective)
+
+
+Effective control strats rely on predictive models.
+A difference equation predicts the "next" thing in a sequence. This is what we do in basic math stuff (discrete time models).
+We will be using differential equations more as they relate changes (over time) to the state of the system.
+
+Models will be in differential equation models, but need to be converted to discrete models for the computer to interpret.
+In some simple situations, the Taylor approximation can be used to convert continuous to discrete time.

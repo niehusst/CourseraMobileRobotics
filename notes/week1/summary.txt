@@ -1,0 +1,43 @@
+Model is something that describes how a system changes over time. Controls help us influence that change.
+Differential equations represent our model.
+
+
+There are a couple of ways to solve dynamical models:
+
+1. Numerically
+taylor expansion helps us approximate differential equations. e.g.
+
+x(t) = 2x   (continuous time)
+x_k+1 = x_k + (delta_t * dx/dt) + 2nd deriv + ....
+
+simplifies:
+x_k+1 = 2*x_k   (discrete time)
+
+
+Sometimes an initial state is included to; 
+x(0) = 10
+
+Together, these equations are called a dynamical model
+
+
+2. Analytically
+To a differential equation can sometimes be solved with integration. e.g:
+x(t) = 2x   ===   dx/dt = 2x
+dx/x = 2dt
+ /\           /\
+ | (1/x)dx =  | 2dt
+\/           \/
+ln(x) = 2t + C
+x(t) = C*e^(2*t)
+
+since we know x(0) = 10; we can substitute to solve for C
+ln(x(0)) = 2*0 + C
+ln(10) = C
+
+
+
+To check candidate solution equations to dynamicall equations, you can perform a check of the initial condition (if you have one) and check that the deriv of the candidate is equal to the discrete time equation.
+
+
+The equilibrium point of a model is where x(t) = 0
+
