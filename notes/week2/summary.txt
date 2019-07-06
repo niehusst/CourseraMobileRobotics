@@ -1,0 +1,49 @@
+Example using the unicycle->differential drive models:
+v = 0,   w(omega) = c
+find v_r, v_l ?
+
+using the conversion equations:
+v_r = (2*v + w*L) / 2*R
+v_l = (2*v - w*L) / 2*R
+
+we can calculate
+v_r = c*L / 2*R
+v_l = -c*L / 2*R
+
+From this we can see that since v_r = -v_l, the robot will just spin with this control input.
+
+
+The importance of robot control models is the feedback it provides; it allows a robot to know where it is in the world and adjust to its environment.
+
+NOTICE:
+to derive the 
+x' = x + D_c * cos(phi)
+...
+
+equations, we just need to examine the control systems we have been given and the taylor expansion.
+
+x_dot = (R/2)*(v_r + v_l) * cos(phi)
+D_r = R*v_r dt  #provided by wheel encoder
+D_l = R*v_l dt
+D_c = (D_r + D_l) / 2
+
+notice that x_dot can be simplified to 
+x_dot = D_c * cos(phi)
+
+For a taylor expansion of x(t) ->
+x(t + dt) = x(t) + x_dot*dt
+   v         v       v
+ updated   prev    change
+   v         v       v
+  x'  =      x   +  D_c*cos(phi)
+
+
+
+Odometry example:
+if robot starts at origin, where is it after 0.1 secs given 10 ticks were recorded for the right wheel and 6 for the left wheel. R=2m and N=100 ticks per revolution, L=4m.
+D_r = 2*pi*R * (delta_tick_r / N)
+...
+use equations from above and plug and play through
+
+
+

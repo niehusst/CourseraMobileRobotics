@@ -1,0 +1,35 @@
+Differential drive mobile robots have 2 wheels and the wheels can turn at different rates (in order to turn)
+
+This is a very common robot design for their simplicity.
+
+Important exogenous params to know about the robot are:
+1. The wheel base (separation between wheels) -> L
+2. Wheel radius  -> R
+
+We want to control the movement speed and direction of the robot, and the inputs we have are v_l and v_r of the wheels.
+
+The robot state is the x,y cartesian position and the phi heading direction in degrees. 
+
+We need to have a control system that can relate the inputs to the state
+
+model = { x_dot = (R/2) * (v_r + v_l) cos(phi)
+        { y_dot = (R/2) * (v_r + v_l) sin(phi)
+        { phi_dot = (R/L) * (v_r - v_l)
+
+
+___ The Unicycle model ___
+
+The inputs for this type of model are translational velocity (v) and angular velocity (omega)
+The dynamics model is:
+
+model = { x_dot = v*cos(phi)
+        { y_dot = v*sin(phi)
+        { phi_dot = omega
+
+
+We design our model with the unicycle model because it is easy to think about, but we must implement things in the differential drive model because it is in terms of the inputs we have control over in a differential drive robot.
+
+v and omega are design params, and using our exogenousparams we can get our input params (v_l and v_r) in terms of v and omega.
+
+v_r = (2*v + omega*L) / 2*R
+v_l = (2*v - omega*L) / 2*R

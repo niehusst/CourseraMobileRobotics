@@ -1,0 +1,10 @@
+To get a robot from A to B:
+we need
+1. a controler
+2. sensor models (how robots get info about environ)
+3. robot model to predict how controler will affect robot
+
+
+The controller must be able to respond to unknown, dynamic environmental conditions. To deal with diff environments, we often employ different controller types (aka behaviors)
+
+These diff behaviors can help us abstract away the complexities of 1 big controller, by having robot goals shift in diff situations. (e.g. switch from mapping behavior to obstacle avoidance behavior)

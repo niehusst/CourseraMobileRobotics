@@ -1,0 +1,20 @@
+Odometry is the means by which we obtain the pose/state information.
+
+The 2 ways we can do this:
+external sensor (e.g. GPS or relative spacial parameters like laser scanners)
+internal sensors contained in robot (e.g. compass, accelerometers, gyros, wheel encoders)
+
+WHEEL ENCODER
+this tool tells us how much each wheel has turned, which can tell us how far and where the robot is.
+Distance info from the wheel encoders is provided as:
+D = 2*pi*R*(change_tiks / N) =>
+D_l, D_r, and D_c (= D_l+D_r / 2)
+
+We can calculate updated positions and headings using the equations:
+
+x' = x + D_c * cos(phi)
+y' = y + D_c * sin(phi)
+phi' = phi + (D_r - D_l) / L
+
+One issue with this is drift. If the wheels are disconnected from the ground, they are going to have false information about the state of the robot. 
+Thus, by themselves, wheel encoders are not enough to give a complete view of the world.

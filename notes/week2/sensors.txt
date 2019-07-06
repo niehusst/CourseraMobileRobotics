@@ -1,0 +1,14 @@
+Sensors are how a robot uses perception to examine the external world.
+The typical skirt of sensors is IR or ultra sonic sensors. They let us measure the distance and direction from the robot to an obstacle.
+
+An abstraction of these sensors that we use is called the Disk Abstraction. 
+We can use our external sensors to determine where obstacles within its disk of sensing are.
+
+Where d is the distance to the obstacle as measured by sensors and phi_o is the direction of the obstacle relative to the robot, the obstacle's coords are:
+obst_x = x + d * cos(phi_o + phi)
+obst_y = y + d * sin(phi_o + phi)
+
+
+
+This equation system can help us solve the rendezvous problem in multi-robotics;  
+If a robot senses another robot(s) in its disk, it calculates the center of gravity of the other robot(s) and goes in that direction.

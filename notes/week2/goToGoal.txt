@@ -1,0 +1,16 @@
+To apply our v-omega based system model; we need the error and a way of controling.
+
+e = phi_d - phi
+omega = PID(e)
+
+phi_d = arctan((y_goal - y) / (x_goal - x))
+
+
+Test control rules:
+1. omega = K*e
+This will cause unexpected behavior because we are not accounting for the circular nature of angles.
+
+2. omega = K * (atan2(sin(e), cos(e)))
+May fail if K is too small to adjust the heading angle enough.
+
+Make sure the K is high enough (expecially if only using a P-regulator

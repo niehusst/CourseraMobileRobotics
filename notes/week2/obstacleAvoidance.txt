@@ -1,0 +1,16 @@
+To avoid obstacles while performing another task (like going to a goal) we need to define a new behavior.
+
+Having detected an obstacle's location using our sensors (disk abstraction) we need to determine what direction to adjust our heading for.
+
+Pure avoidance:
+once obst is detected, lose sight of other goals, just go in the opposite direction of the obstacle.
+
+Blended avoidance:
+taking the direction of the goal into account as well, we can determine how much the heading needs to be adjusted to both reach the goal and dodge the obst.
+
+__ Arbitration Mechanisms __
+Arb mech is a way of combining/switching between behaviors.
+Winner takes all => hard switch in behavior (pure goal -> pure obst avoid)
+blending => combined behaviors
+
+From an analysis point of view, pure strats and hard switches is easiest, but performance wise blended behavior does better.

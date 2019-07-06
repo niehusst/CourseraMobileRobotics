@@ -1,0 +1,13 @@
+For robots that explore unknown environments, it is best to plan a library of behaviors to switch between rather than overplan 1 single one.
+(in a factory setting, 1 behavior is usually plenty and must be optimized, else optimization is not helpful)
+
+Say we want to change behavior of a robot to change direction heading from phi to phi_d.
+
+We can set r(reference) = phi_d,  e = phi_d - phi, phi_dot = omega
+So we need to change omega to reach our goal, r
+
+One problem common with angles is that 0pi == 100pi, which can lead to bad behaviors in error calculation (massive error when not actually far off).
+To solve this, we must ensure that error is between pi and -pi. The way to do this is using atan2;
+e' = atan2(sine(e), cos(e))
+
+With this adjustment, the PID regulator should give the robot the ability to control its inputs to reach r.
