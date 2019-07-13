@@ -1,0 +1,35 @@
+Assuming we know the state (which we don't) we can build a fully stable system.
+
+x_dot = A*x + B*u
+u = -k*x
+
+x_dot = A*x - B*k*x = (A - B*k)*x
+                        A_hat
+
+Using the state to compute input is called closed-loop system dynamics.
+We want to choose k such that A_hat has all negative eigenvalues (if possible).
+
+The first part of choosing k is the dimensions;
+since u \in R and x \in R^2, 
+u - (mx1)   <- m==1 here since u is scalar
+x - (nx1)
+Then we know from u=-k*x that 
+k - (mxn) 
+because mat multiply dims are:
+(mx1) = (?x?)*(nx1)  << inner must match n and outer m
+
+x_dot = ( [[ 0 1 ]  -  [[ 0 ] * [k1 k2] ) * x
+           [ 0 0 ]]     [ 1 ]] 
+      = [[  0   1  ] * x
+         [ -k1 -k2 ]]
+            A_hat
+If we were to choose k1=k2=1, we would find 
+eig(A_hat) = -0.5 +- 0.866i
+
+Since the real components are all negative, we have an asymptotically stable! However, the existence of an imaginary component means that there will be oscillations in the control (e.g. overshooting).
+
+Choosing k1=0.1 k2=1, we find
+eig(A_hat) = -0.1127,  -0.8873
+Since the eigenvalues are all real and negative, we have an asymptotically stable system with no oscillation. (However, running the system shows that the mobile agent responds much more slowly).
+
+

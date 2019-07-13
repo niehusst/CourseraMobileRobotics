@@ -1,0 +1,34 @@
+We need to develop a model class that is simple and general enough to applied broadly and easy to use.
+An effective way of doing this is with Linear Systems (as a simplification of dynamicall systems).
+
+___ 1D Point mass example ___
+given a point mass at positition p and acceleration u, we can say (with new vars)
+  x1 = p
+  x2 = p_dot
+  x1_dot = x2
+  x2_dot = p_dot_dot = u
+
+We can store these x vars in a 2d state variable;
+x = [x1 x2]
+x_dot = [x2 u]
+
+this can be reworded with matrices;
+
+x_dot = [[ x2 ] = [[ 0 1 ] * [[ x1 ] + [[ 0 ] * u
+         [ u  ]]   [ 0 0 ]]   [ x2 ]]   [ 1 ]] 
+                      A                   B
+
+y = p = x1 = [ 1 0 ] * x
+                C
+
+This gives us the general Linear Time-Invariant System on State-Space form:
+x_dot = A*x + B*u
+y = C*x
+
+(remember R^n describes dimension level)
+{ x in R^n  =>  A: nxn
+{ u in R^m  =>  B: nxm
+{ y in R^p  =>  C: pxn
+These dimensions are good sanity checks.
+
+This general system can represent a 2D point mass system as well, but with different (and larger) matrices.

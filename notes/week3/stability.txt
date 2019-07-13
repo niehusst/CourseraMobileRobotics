@@ -1,0 +1,21 @@
+Stability is most important because an unstable system that blows up is useless.
+
+For a scalar STI system;
+x_dot = a*x
+x(t) = e^(a*t) * x(0)
+there are 3 cases:
+Asymptotically stable: x(t) -> 0 for all x(0)    (a<0)
+Unstable: there exists x(0) where |x(t)|->inf    (a>0)
+Critically stable: x doesnt blow up or go to 0   (a=0)
+
+For matrices, we can do something similar with eigenvalues.
+For example, the equiv matrix system;
+x_dot = A*x
+x(t) = e^(A*t) * x(0)
+Asymt stable iff: Real(eig)<0 for all eigvals of A
+Unstable if: Real(eig)>0 for any eigval of A
+Critical Stable iff: Real(eig)<=0 for all eigvals of A
+
+Because of these stability guidelines, we design systems to have matrices that have ALL negative eigen values whenever possible.
+
+If there are ANY positive eigenvalues, system is unstable

@@ -1,0 +1,45 @@
+LTI system behavior
+ignore input u and output y;
+x_dot = A*x
+
+if everything is scalar
+x_dot = a*x
+x(t_0) = x_0
+
+proposed solution:
+x(t) = e^(a*(t-t_0)) * x_0
+
+Checks we must perform to see if this is a true solution:
+1. initial condition
+x(t_0) = e^(a*(t_0-t_0)) * x_0 = x_0
+
+2. Dynamics (derivative equals our x_dot equation)
+  d/dt x(t) = a * e^(a*(t-t_0)) * x_0 = a*x 
+                (^ this is just sub in x(t) provided)
+
+
+We can do the same thing with matrices instead of scalar `a`
+The deriv of matrix exponential:
+d/dt e^(A*t) = A*e^(A*t)
+
+e^(A*(t-t_0)) is often called the State Transition Matrix, notation being PHI(t,t_0).
+
+x_dot = A*x  =>  x(t) = PHI(t, T)*x(T)
+
+  Some common identities for PHI
+{ d/dt PHI(t,t_0) = A*PHI(t,t_0)
+{ PHI(t,t) = I 
+
+
+LIEBNITZ(?) RULE:
+     /\t                      /\t
+d/dt |   f(t,T) dT = f(t,t) + |   d/dt f(t,T) dT
+    \/t_0                    \/t_0
+
+
+Summary:
+x_dot = A*x + B*u,  y = C*x
+                               /\t
+y(t) = C*PHI(t,t_0)*x(t_0) + C |  PHI(t,T)*B*u(T) dT
+                              \/t_0
+PHI(t,T) = e^(A*(t-T))                              

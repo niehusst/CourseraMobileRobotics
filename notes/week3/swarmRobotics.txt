@@ -1,0 +1,23 @@
+We will solve the rendezvous problem
+
+Given a collection of mobile agents who can only measure the relative displacement of their neighbors (no GPS)
+We want all the robots to meet in the same place
+
+x_dot_i = sum(x_j - x_i)
+x_dot = -L*x       # L is graph Laplacian
+x = [ x1 ... xN ]
+
+If graph is connected, the graph Laplacian L has 1 eigen value that is 0 and the rest are positive.
+Since the L above is negative, then there are no positive eigen values; and system is griitically stable.
+
+The above equation is called the concessus equation.
+It makes agents agree/converge
+
+x_i -> a, for all i   
+      (aka)   
+(x_i - x_j) -> 0 for all i,j 
+
+
+
+This is a sort of special case critical system, because there is only one 0 value eigen value, it points in the direction of the null space (all values mapped to 0), which simulates an asymptotically decayed output; keeping the mobile agents on the right track.
+

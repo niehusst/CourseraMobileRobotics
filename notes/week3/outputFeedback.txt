@@ -1,0 +1,31 @@
+Output feedback is taking the output of a system, and using it to give input back into the system.
+
+For a simple point mass robot with position p and acceleration u (p_dot_dot == u)
+
+x_dot = [[ 0 1 ] * x + [[ 0 ] * u
+         [ 0 0 ]]       [ 1 ]]
+            A             B
+
+y = [ 1 0 ] * x
+       C
+
+If we make the goal to move towards the origin; notice
+u > 0 if y < 0 (desired behavior)
+u < 0 if y > 0
+
+A simple controler that would accomplish this is u=-y
+(general form)
+u = -k*y = -k*C*x
+
+x_dot = A*x + B*u 
+      = A*x - B*k*C*x
+      = (A - B*k*C)*x
+           A_hat
+
+The big matrix math chunk can just be simplified to a new coefficient matrix, A.
+Thus, if possible, pick k such that:
+Real(eig) < 0 for all eigenvalues of (A-B*k*C)
+
+However, building a controler using only the output will at best lead to a critically stable system that often can't fully do what we want it to.
+
+To completely stabalize a system, we need to operate on ALL the state parameters.

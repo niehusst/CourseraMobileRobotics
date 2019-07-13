@@ -1,0 +1,65 @@
+How do we produce linear models from non-linear systems?
+
+Most models are not linear, but at critical points, linear models can be good approximations.
+
+
+Given a generalized non-lin model
+x_dot = f(x,u) 
+y = h(x)
+
+We want to find a local linear model around an operating point (where the non-lin model can be approximated to lin).
+(o subscript refering to operating point)
+(x_o, u_o) -> (x = x_o + delta_x, u = u_o + delta_u)
+
+  We want our operating point to satisfy:
+  f(x_o, u_o) = 0
+  h(x_o) = 0
+
+If we do, then using taylor expansion principles we can say;
+delta_x_dot = x_dot - x_o_dot = x_dot = f(x_o, u_o)
+            = A*delta_x + B*delta_u
+
+y = C*delta_x
+
+Where (jacobian being partial derivatives of high dimension matrix)
+A = jacobian_f/x(x_o, u_o)
+B = jacobian_f/u(x_o, u_o)
+C = jacobian_h/x(x_o)
+
+
+___ Inverted pendulum example ___
+g=gravity, l=length_pendulum, theta=pendulum_angle, u=acceleration_of_base
+theta_dot_dot = (g/l)*sin(theta) + u*cos(theta)
+
+double dot tells us that we have 2D system.
+
+state => x1=theta , x2=theta_dot
+output=> y = x1
+
+f(x,u) = [[            x2             ]  = x_dot_dot
+          [ (g/l)*sin(x1) + u*cos(x1) ]]
+h(x) = x1
+
+operating point is where pendulum is straight up, we don't have to do anything.
+(x_o, u_o) = (0,0)
+Our state space model is evaluated at the operating point
+
+A = [[ jacobian_f1/x1  jacobian_f1/x2 ] 
+     [ jacobian_f2/x1  jacobian_f2/x2 ]]
+  = [[       0        1 ]  #no x1 to derive wrt so 0  
+     [ (g/l)*cos(x1)  0 ]] #omitted -u*sin(x_o)=0 
+  = [[  0   1 ]
+     [ g/l  0 ]] #since evaluated at operating point, cos simplifies
+
+B = [[ jacobian_f1/u ]
+     [ jacobian_f2/u ]]
+  = [[    0    ]
+     [ cos(x1) ]]
+  = [[ 0 ]
+     [ 1 ]]  #evaluated cos(0)=1
+
+C = [ jacobian_h/x1  jacobian_h/x2  ]
+  = [ 1 0 ]
+
+
+Sometimes linearizations give reasonable models, but sometimes they lose some of the control/detail that was present in the non-lin model, diminishing their usefulness.

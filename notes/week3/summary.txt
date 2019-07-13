@@ -1,0 +1,93 @@
+Think about how inputs and outputs define a system
+
+How do we turn
+m*f_dot_dot = a*f_dot + b*f + c*p 
+
+into? =>
+  x_dot = A*x + B*u
+  y = C*x
+
+In the end, we want to ick our input u such as to get a desired y from black-box (A,B,C)
+u  -->  (A,B,C)  -->  y
+
+___ GET LINEAR STATE SPACE FORM ___
+To turn a general dynamical equation into a system in state-space form:
+1. Pick state variables and define inputs and outputs
+2. Write the 2nd order differential equation as a pair of first order ones
+3. Put these in terms of state, input, and outputs
+
+(For above example):
+
+1. x = [[   f   ]
+        [ f_dot ]]
+   u = p
+   y = f
+These choices define the dimensions of A,B,C
+
+2. f_dot = x1_dot = x2
+   f_dot_dot = x2_dot = (1/m)*(a*x2 + b*x1 + c*u)
+  
+3. x_dot = [[ x1_dot ]
+            [ x2_dot ]]
+
+
+Now we want to get into state-space matrix form, so we solve for A,B,C from the basic state-space form
+                   A                     B
+[[ x1_dot ]  = [[  ?  ] * [[ x1 ]  +  [[ ? ] * u
+ [ x2_dot ]]    [     ]]   [ x2 ]]     [   ]]
+
+Since x1_dot == x2 we can solve for top row of A & B
+(top row of B must be 0 because it makes no contribution)
+[[ x1_dot ]  = [[ 0 1 ] * [[ x1 ]  +  [[ 0 ] * u
+ [ x2_dot ]]    [  ?  ]]   [ x2 ]]     [ ? ]]
+ 
+Now we solve for the bottom rows. since x2_dot ==
+(1/m)*(a*x2 + b*x1 + c*u) we have to include the values m,a,b,c in our matrix entries accordingly:
+[[ x1_dot ]  = [[  0   1  ] * [[ x1 ]  +  [[  0  ] * u
+ [ x2_dot ]]    [ b/m a/m ]]   [ x2 ]]     [ c/m ]]
+ 
+Now, we have A and B. We nwo need to solve for C:
+y = f = [ ? ] * x
+
+Since x = [[   f   ]
+           [ f_dot ]]
+y = [ 1 0 ] * x
+
+
+___ LINEARIZE NON-LINEAR SYSTEM ___
+Given:
+z_dot_dot = l*z^2 + g*z_dot + c*t
+
+x = [[   z   ]  
+     [ z_dot ]] 
+u = t
+
+Since z^2 isnt linear, we have to choose an operating point that will allow us to make the system linear for that point (approximating the entire system)
+We will let that point be x = (0,0)
+
+  For notation stuff:
+x = [[ x1 ]
+     [ x2 ]]
+x_dot = [[ x1_dot ]  =  [[ f1 ]
+         [ x2_dot ]]     [ f2 ]]
+  
+Now we want to rewrite in terms of state variables:
+x_dot = [[   z_dot   ]  = [[          x2         ]
+         [ z_dot_dot ]]    [ l*x1^2 + g*x2 + c*t ]]
+
+Now we have to compute each matrix as a jacobian, using; linearizing as allowed by x=(0,0)
+
+A = [[ df1/dx1  df1/dx2 ]
+     [ df2/dx1  df2/dx2 ]]
+  = [[   0     1 ]
+     [ 2*l*x1  g ]]
+  = [[ 0 1 ]
+     [ 0 g ]] # substitute in x1=0, x2=0
+
+B = [[ df1/du ]
+     [ df2/du ]]
+  = [[ 0 ]
+     [ c ]]  #since no x terms, evaluation leaves same
+
+
+

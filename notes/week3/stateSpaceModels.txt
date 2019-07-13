@@ -1,0 +1,37 @@
+In an LTI model, 
+   x is state
+   y is output
+   u is input
+
+x_dot = A*x + B*u
+y = C*x
+
+A is generally defined by the laws of physics (we can't change it much). B and C are usually up to us and can be influenced by how well we can control our input and state.
+
+How shoudl input be selected?
+How can we pick u given y?
+
+
+__ Convert Car model to State-Space __
+Car model:
+v_dot = (c/m)*u - gamma*v
+
+say our state is x = [[ p ]
+                      [ v ]]
+
+A = -gamma =>  [[ 0    1   ]
+                [ 0 -gamma ]]
+
+B = c/m    =>  [[  0  ]
+                [ c/m ]]
+
+C = 1      =>  [ 1 0 ]
+
+
+
+LTI systems are good approximations, but since they are linear, they cannot take into account things like sin/cos trig stuff.
+
+But, for phi << 1
+cos(phi) = 1
+sin(phi) = phi
+
