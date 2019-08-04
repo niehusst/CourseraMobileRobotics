@@ -1,0 +1,51 @@
+Controllability of the system determines whether we can do pole placement.
+Controllability depends on the B matrix (which is given by the actuators/hardware of our system)
+
+
+We want to solve
+
+x* = [ B  AB  ...  A^(n-1)B ] [[ u_(n-1) ]
+               ^               [   ...   ]
+      gamma matrix (n x mn)    [   u_1   ]
+                               [   u_0   ]]
+
+This system is only possible to solve for any target state iff rank(gamma) == n
+gamma is also known as the controllability matrix.
+
+A linear LTI system is Completely Controllable (CC) if it is possible to go from any initial state to any final state. (while this may get us from 1 point to any another, it does not mean we can take any direction/heading)
+
+CC Theorem 1: The system is CC iff rank(gamma) = n
+
+
+___ EXAMPLES ___
+1.
+x_dot = [[ 2 0 ] * x + [[ 1 ] * u
+         [ 1 1 ]]       [ 1 ]]
+n = 2   #num rows in B
+gamma = [ B  AB ]  #since n==2 only 2 entries of gamma
+
+Calculating AB, we find that 
+gamma = [[ 1 2 ]
+         [ 1 2 ]]
+Since the column vectors point in the same direction, (aka are not linearly independent) the rank is 1. 1 < n, so this system is not controllable
+
+
+2. 
+x_dot = [[ 0 1 ] * x + [[ 0 ] * u
+         [ 0 0 ]]       [ 1 ]]
+n = 2 
+gamma = [ B  AB ] 
+
+Calculating AB, we find that 
+gamma = [[ 0 1 ]
+         [ 1 0 ]]
+Since all the column vectors point in the diff directions, the rank is 2. 2 == n, so this system is controllable
+
+
+CC Theorem 2: Pole-placement to arbitrary eigenvalues is possible iff the system is CC.
+
+
+___ In MATLAB ___
+
+G = ctrb(A,B);
+rank(G) == size(B)[2]

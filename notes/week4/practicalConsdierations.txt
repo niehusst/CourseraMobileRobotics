@@ -1,0 +1,15 @@
+While in theory, we have the Separation principle, but theory and practice arent' the same in real life.
+
+For the observer, we want large eig vals so that its faster than the controller since the controller cant do anything until it has x_hat. 
+Usually large eig values lead to large observer gains and saturation. But bcus the observer is completely software, there is no hardware to saturate, so it doenest matter that they are large.
+
+Thus, we want all the observer eigvals to be more negative that most/all of the controller eigvals (of course they should all be negative to some extent).
+
+
+The state feedback/observer design combination is very general. K and L can be found without pole placement.
+An alternaitive for picking K is LQ optimal control.
+L could be picked using the Kalman Filter.
+
+
+While all this is great and all, the real world is more complex than an LTI system. To try to account for the complexities an LTI system lacks, we can try to design hybrid systems.
+

@@ -1,0 +1,75 @@
+Controllability and Observability
+
+Matrix systems must be FULL RANK to be Completely Controllable, or Completely Observable.
+We use state feedback to make the system stable. 
+
+We don't know what the state is officially,  so state feedback becomes
+u = -K*x_hat
+
+The dyanmics of the whole controllable sys is;
+x_hat_dot = A*x_hat + B*u + L*(y - C*x_hat)
+
+The critical part for observability is that the error dynamics are stable as well (asymptotically converge)
+e_dot = x_dot - x_hat_dot = (A - L*C)*e
+(the L matrix is the critial matrix for observability)
+
+
+____ CHECK IF SYSTEM IS CONTROLLABLE/OBSERVABLE ____
+
+x_dot = A*x + B*u
+gamma = [ B  AB  ...  A^(n-1)B ]  #controllabilty mat
+Omega = [[   C    ]    
+         [   CA   ]     #obvervability mat
+         [   ...  ]
+         [ CA_n-1 ]]
+
+1. Check if LTI system is contollable;
+if rank(gamma) < len(A):
+  get new B matrix; more motor control
+else:
+  system is completely controlable
+
+2. Use state feedback (soon to use x_hat instead)
+u = -K*x
+The shape of K is determined by dims of x and B
+
+3. Perform pole placement on K
+Choose only negative eigen values
+They should be closer to 0 so as to not saturate actuators
+Avoid imaginary components to eig vals unless oscillation is desired
+
+4. Check if LTI system is observable:
+if rank(Omega) < len(A):
+  get new C matrix; better/more sensors
+else:
+  system is completely observable
+
+5. Estimate state for state feedback using output, y
+An observer must be set up to approx state from y;
+x_hat_dot = A*x_hat + B*u + L*(y - C*x_hat)
+e_dot = (A - L*C)*e
+e = x - x_hat
+
+6. Perform pole placement on L
+Same rules/guidlines as above for pole placement
+The chosen eigvals should be farther from 0 than the controllability eigvals since there are no actuators to saturate (so observer can be as quick responding as we want)
+
+7. Execute the system using the approximated system
+x_hat_dot = A*x_hat + B*u + L*(y - C*x_hat)
+u = -K*x_hat
+Follow execution steps
+
+____ EXECUTION ____
+Steps for controllable observable system
+
+1. Wake up (t=t0, x=x0, x_hat=x_hat0)
+2. Start loop (dt increments)
+3. Read output y (in place of actual state x)
+4. Compute control u=-Kx_hat
+5. Send control u
+6. Update x_hat using dynamics
+    x_hat_dot = A*x_hat + B*u + L*(y - C*x_hat)
+7. Next x_hat is approximation;
+    x_hat_k+1 = x_k + dt*x_hat_dot
+    (x_k is the previous approximated state)
+8. Loop repeat

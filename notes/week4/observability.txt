@@ -1,0 +1,14 @@
+Just like controlabilty, we find a matrix Omega, the observability matrix.
+
+Omega = [[   C    ]
+         [   CA   ]
+         [   ...  ]
+         [ CA_n-1 ]]
+
+CO Theorem 1: Omega is Completely Observable (CO) iff Omega is full rank (aka rank(Omega)==n).
+
+CO Theorem 2: Pole placement to arbitrary eig vals is only possible if Omega is CO.
+
+Now we only have to put together the controllabilty and observability to make a full system that is only dependent on the output y measurements that we DO know.
+
+

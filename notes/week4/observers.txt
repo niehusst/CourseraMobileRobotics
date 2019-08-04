@@ -1,0 +1,35 @@
+So far we have been pretending we have our state x when we really dont. We only have out sensor measurements y.
+
+We can approximate x using y with the help of an observer.
+
+x_dot = A*x
+y = C*x
+
+With our aproximated x, x_hat;
+x_hat_dot = A*x_hat (this is the predictor)
+
+We must also add a notion of how wrong the estimate is to the model. We do this by finding the difference of y (the real state x * C) and C*x_hat, what y would be if the state actually were x_hat. Lastly we multiply by a matrix gain, L
+L*(y - C*x_hat)   # this is the corrector
+
+Ultimately, we have the Luenberger observer
+x_hat_dot = A*x_hat + L*(y - C*x_hat)
+
+But what is L? How to do we pick it?
+We know we want to stabalize (drive to 0) the state estimation error. We must determine that from the observer dynamics;
+e_dot = x_dot - x_hat_dot = A*x - A*x_hat - L*(C*x - C*x_hat)
+      = (A - L*C)*e
+
+We want to stabalize matrix (A - L*C), aka all eigenvals are negative, so we do pole placement to get a stable observer.
+
+Just like with controllers, pole placement with an observer isn't always possible, it depends on the observability of the system.
+
+
+         +---------------------+
+    +--> |  x_dot = A*x        |
+    |    |  y = C*x            |-----------------+
+    |    +---------------------+                 |
+ u  |                                            | y
+    |    +------------+     x̂    +----------+    |
+    +--- |  u = -K*x̂  | <------- | observer | <--+ 
+         +------------+          +----------+
+

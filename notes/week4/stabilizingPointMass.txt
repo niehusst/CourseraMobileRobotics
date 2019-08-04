@@ -1,0 +1,66 @@
+How do we be more systematic in control design?
+How do we define the system using y? (not x state)
+
+We will design input u as if we had x (even though we dont), completely ignoring y
+
+We will do this using Pole Placement; (aka picking the eigen vals (sometimes called poles) we want for our system matrices)
+
+Given a typical LTI system
+x_dot = A*x + B*u
+State feedback is setting our input u using x;
+u = -K*x = -[ k1  k2 ] * x
+k1 and k2 are our control gains. The idea of Pole Placement is to pick these gains in order to make the closed loop system have the desired (negative real part) eigenvals.
+
+To choose them we use the following equation;
+XM(lambda) = det(lambda*I - M) = 0
+
+lambda is the eigenvalues we must solve for.
+The following example is for a 2x2 matrix.
+M = [[ m1 m2 ]
+     [ m3 m4 ]]
+
+lambda*I - M = lambda * [[ 1 0 ] - M 
+                         [ 0 1 ]]
+             = [[ lambda-m1      -m2   ]
+                [    -m3     lambda-m4 ]]
+Now we find the det to be;
+lambda^2 - (m1 + m2)*lambda + m1*m4 - m2*m3
+
+To find the eigenvals, we set equal to 0 and solve;
+lambda = (m1+m4)/2 +- sqrt( ((m1+m4)^2 / 4) - m1*m4 + m2*m3 )
+
+
+But this is a pain to solve, so we can use the fundamental theorem of algebra instead;
+  "The roots in a polynomial are completely determined by the coefficients"
+
+
+Going back to our closed loop system (outside feedback y is not taken into account), we have
+x_dot = (A-B*K) * x
+Given A and B, we can use our K=[k1 k2] to find lambda
+(e.g. where A-B*K is know as follows;)
+A-B*K = M = [[  0   1  ]
+             [ -k1 -k2 ]]
+XM(lambda) = det( [[ lambda    -1     ] )
+                   [   k1   lambda+k2 ]]
+           = lambda^2 + lambda*k2 + k1
+
+Now, if we had some desired eigenvals, (lambda1->n)
+they would have the characteristic polynomial
+              __ n
+phi(lambda) = ||   (lambda - lambda_i)
+                i=1
+
+So, picking our desired lambda_i values (e.g. -1 and n=2) we get something like:
+phi(lambda) = lambda^2 + 2*lambda + 1
+
+Notice the similarity to the equation XM(lambda) above? we can just sub the coefficients of the polynomial we calculated with the k gains.
+
+Thus, we find k2=2 and k1=1 and we have designed a stable closed loop system since we know the eigenvalues are negative.
+
+         +---------------------+
+    +--> |  x_dot = A*x + B*u  | --+
+    |    +---------------------+   |
+ u  |                              | x
+    |         +------------+       |
+    +-------- |  u = -K*x  | <-----+
+              +------------+

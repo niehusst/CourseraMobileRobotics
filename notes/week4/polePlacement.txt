@@ -1,0 +1,33 @@
+Now we will generalize the pole placement algorithm for any any closed loop system.
+
+However pole placement isn't always possible; 
+If there is a lack of "controllability" (the effect of the input is not sufficently rich to influcnce the system enough) then the pole placement math won't work out.
+
+
+And choosing the eigen values isn't an exact science, it involves some guess and checking.
+Assuming we have sufficient control authority to do pole placement, there are some rules to keep in mind:
+If the imaginary component of an eigval != 0, then there exists another eigval such that imaginary(eig1) == -imaginary(eig2)  &&  real(eig1) == real(eig2) {this is called the rule of conjugate pairs}
+For all eig, real(eig) < 0 for stability.
+If there exists for any eig, imaginary(eig) != 0, there will be oscillations in the system.
+
+The choice of eigs also affects the rate of convergence (dominated by the smallest abs(real(eig)) of the system).
+The larger the min eig, the faster the system will converge. However, picking too large of eigs will lead to a system that will fry the machine parts or react too strongly to small inputs. 
+
+___ in MATLAB ___
+% sys mats
+A=[1 0 ; 1 -1]; B=[1 1];
+
+% pick poles
+P = [-0.5+1i, -0.5-1i];
+
+% place poles
+K = place(A,B,P);
+
+% find solution
+x=[1 ; 1]; t=0; tf=5; dt=0.01;
+
+while (t<tf);
+  x=x+dt .* (A-B*K)*x;
+  t=t+dt;
+end;
+

@@ -1,0 +1,45 @@
+If we don't have controllability, we have to get a different B matrix (different hardware?).
+
+A segway robot is just an inverted pendulum on top of a unicycle.
+
+The base has a system:
+x1_dot = v*cos(psi)
+x2_dot = v*sin(psi)
+psi_dot = omega
+(v and omega are extra states)
+
+The inverted pendulum:
+phi
+phi_dot
+
+Our inputs are wheel torques;
+T_l and T_r
+
+This gives us the matrices; (exp T means transpose)
+x = [x1 x2 v psi psi_dot phi phi_dot]^T
+u = [T_l T_r]^T
+x_dot = f(x,u)
+      = [v*cos(psi) v*sin(psi) v_dot psi_dot psi_dot_dot phi_dot phi_dot_dot]^T
+
+      
+This full system is a pile of shit, so we linearize it around the position (0,0) where the pendulum is vertical.
+
+Even with this though, we cant make it controllable because the unicycle model hecks it up (linearized unicycle model cant turn)
+
+To fix this, we simplifiy the system to ignore the unicycle aspect (not alwasy best idea IRL to just ignore aspect of system bcus not completely controllable??)
+
+Our new state is:
+x = [v  omega  phi  phi_dot]^T
+
+This is now a CC system. But to make it able to move (rather than just stand upright, as approximated to) we have to subract desired v_d and omega_d terms:
+x~ = x - [v_d omega_d 0 0]^T = x - delta
+(The 0s indicate we still want to try to keep pendulum at vertical position)
+
+Curvature of the path is;
+k = omega/v
+
+
+
+
+
+

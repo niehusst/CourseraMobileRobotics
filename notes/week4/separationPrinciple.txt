@@ -1,0 +1,43 @@
+The building blocks for our system are:
+ - controllability
+ - observability
+ - state feedback 
+ - observers
+ - pole-placement
+
+Putting all these things together is known as the Separation Principle.
+
+Given a typical LTI system that is assumed CC and CO.
+Now we have to design our control system;
+
+1. State feeback controler (designed as if we had x)
+u = -K*x
+x_dot = (A - B*K)*x   # but really all these xs are x_hat because that's what value we really have;
+=>   u = -K*x_hat
+
+2. Estimate x using observer
+x_hat_dot = A*x_hat + B*u + L*(y - C*x_hat)
+e_dot = (A - L*C)*e
+e = x - x_hat
+
+We want both x and e to be stable to get a good aproximation of a stable system. Lets combine both dynamics systems;
+
+x_dot = A*x - B*K*x_hat
+      = A*x - B*K*(x-e)
+      = (A - B*K)*x + B*K*e
+
+This can be expressed as the joint matrix system;
+[[ x_dot ]  = [[ A-BK   BK  ] * [[ x ]
+ [ e_dot ]]    [  0    A-LC ]]   [ e ]]
+                    (M)
+ This only works if this joint system, M is asymptotically stable (both controllable and obsservable)
+
+Notice that M is upper triangular matrix. Its eigvals are the given by the eigvals of the diagonal blocks (we can ignore 0 and BK in M)
+
+The Separation Principle tells us we can design systems as if we had x. Thus, control and observer design can be completely separated.
+
+
+The controller (software stuff we control) is made up of the observer and the state feedback system. The dynamical models (i.e. LTI system) is physics, and cannot be controlled beyond buying new hardware for a system.
+
+
+
