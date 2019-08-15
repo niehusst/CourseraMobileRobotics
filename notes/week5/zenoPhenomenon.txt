@@ -1,0 +1,16 @@
+The Zeno Phenomenon is when a system causes infintely many switches (in behavior) in less than infinite time.
+This is bad because you physically in the real world does not allow infinite action in less than infinite time; thus the model is inaccurate.
+
+Type1 Zeno: infinte switches in single time instance.
+Type2 Zeno: infinte switches in finite time interval.
+
+Type1 can be detected relatively easily and can be fixed very straightforwardly. 
+Type2 on the other hand, is hard to detect and fix.
+
+
+Example of type1 Zeno:
+
+x_dot = { x= 1  if y <= 0
+        { x=-1  if y >  0
+
+Since both states have a guard switch very close to 0, the system switches wildly at y==0.       

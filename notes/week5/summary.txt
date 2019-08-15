@@ -1,0 +1,20 @@
+Type1 zeno is infinite switching at a certain condition caused by the guard conditions.
+It occurs when Lf1g < 0 && Lf2g > 0 at a specific value for g(x)=0. (aka, 2 behavior functions are pointing in opposite directions at a single point)
+
+When type1 zeno is found, we want to add a Sliding Mode to induce the desired behavior at this failure point (instead of getting zeno switching)
+
+____ EXAMPLE ____
+g(x) = x - 10
+Lf1g = 6 - x
+Lf2g = 5x
+
+g(x) == 0   @   x=10
+Plugging in x=10 for the Lie derivs test;
+6-10 < 0   &&   5*10 > 0
+Thus, we have zeno effect in this control system.
+
+TO move along the surface (instead of zeno) we add a sliding behavior that activates at g(x)==0;
+x_dot = (Lf2g*f1 - Lf1g*f2)/(Lf2g - Lf1g)
+
+The sliding mode can be safely exitted once the zeno test condition is false (Lf1g < 0 && Lf2g > 0)
+

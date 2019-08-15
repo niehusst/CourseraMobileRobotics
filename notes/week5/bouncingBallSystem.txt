@@ -1,0 +1,38 @@
+Hybrid system of bouncing ball
+
+System between bounces (in air)
+h_dot_dot = -g (gravity)
+x_dot = [[ 0 1 ] * x + [[  0 ] 
+         [ 0 0 ]]       [ -g ]]
+y = [ 1 0 ] * x
+
+System changes (resets) while on the ground
+h_dot = -gamma * h_dot   
+#models ball velocity changing direction and loses some gamma fraction of energy each bounce
+x = [[ 1    0   ] * x
+     [ 0 -gamma ]]
+         R
+The reset matrix changes the state of the ball on dynamics switch.
+
+since this "hybrid" system only has 1 behavior, it will switch to itself, but reset on a guard condition.
+
+
+       +-------------+  x \in G
+       |             |  [ 1 0 ]*x <= 0 and h_dot <= 0
+ +-----+---------+   |  # aka height <= 0 and
+ | in_air system |   |  # the velocity is negative
+ +---------------+   |
+       ^             |
+       +-------------+  x=Rx
+
+
+Using LTI system techniques, we can calculate the equation for the bounces as T->inf
+
+T_inf = 2*v / g * 1/(1-gamma)
+Since all these inputs can compute to a real value time (ie not inf) it takes less than infinite time to do infinite bounces with this hybrid system. 
+Thus the model has undefined behavior at the time past the above equation; which is a big problem for long running systems.
+Since time doesn't go to infinite, we cant have asymtotic system stability.
+
+Where we have infinitely many actions (switches) in less than infinite time is known as the Zeno Phenomenon.
+
+

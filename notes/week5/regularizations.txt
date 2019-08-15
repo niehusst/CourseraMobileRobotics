@@ -1,0 +1,47 @@
+How do we compute how to slide along the desired mode though??
+
+Since we know that g(x) = 0, the deriv dg/dt = 0
+We can express sliding as combination of the f1 and f2 vectors representing different behaviors;
+dg/dt = ∂g/∂x*x_dot = ∂g/∂x(o1*f1 + o2*f2) 
+      = o1*Lf1g + o2*Lf2g  #using Lie deriv notation
+
+We know because dg/dt==0 that o1 + o2 = 1 and neither are negative if the system slides correctly.
+
+If it is negative, then Type1 Zeno
+
+Going to an example of a Type1 Zeno ;
+x_dot = { -1  x>=0     #f1
+        { +1  x< 0     #f2
+g(x) = x
+
+Lf1g = (∂g/∂x)f1 = 1*-1 = -1
+Lf2g = (∂g/∂x)f2 = 1*1 = 1
+
+Since Lf1g < 0  &&  Lf2g > 0, we have type1 Zeno.
+
+from dg/dt = 0, we can derive from equation on line 6,
+o2 = -o1 * (Lf1g/Lf2g)    #plugging in from above,
+o2 = -o1 * (-1/1)
+o2 = o1
+
+Since we know o1+o2=1 where we don't have error, we can find an induced mode where it functions correctly;
+o1 = o1 = 0.5       
+
+x_dot = .5*f1 + .5*f2 = = -.5 + .5 = 0
+
+0 is excatly what we wanted to get out because we are tyring to move x to 0 with the above control system.
+
+o1 = Lf2g/(Lf2g - Lf1g)   #from line 6
+o2 = Lf1g/(Lf2g - Lf1g)
+
+x_dot = o1 + o2   #the induced model
+
+This tells us how to actually find the sliding/induced mode controller. To add the sliding mode to the above control:
+
+x_dot = { f1(x)    g > 0
+        { o1 + o2  g = 0 && Lf1g < 0 && Lf2g > 0
+        { f2(x)    g < 0
+
+By adding this middle mode, we can avoid type1 Zeno in any situation (even as a precautionary action w/o testing to see if it has Zeno issue). The induced sliding mode should always be added at the infinte switching point.
+
+  The sliding mode reguralizes the system

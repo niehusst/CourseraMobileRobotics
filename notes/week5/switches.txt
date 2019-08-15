@@ -1,0 +1,13 @@
+While LTI systems can do a lot for us, it is usually not enough for real world robotics.
+Up till now, we have been using a one-size-fits-all controller that we just swap the values for. Unfortuneately, robotics is not nearly that simple.
+
+Switches in dynamics occur all the time; the dynamics of a leg changes when the foot is on and off the ground.
+
+Controllers may switch to accomodate changing dynamics by design or by necessity.
+These controller switches in behavior help robots deal with changing environments.
+
+How do we represent a model that switches?
+How do we define stability and performance since time doesnt go to infinity in just one control mode?
+How do the multiple behaviors fit together? (compositionality)
+Are there issues/traps with switch based systems?
+

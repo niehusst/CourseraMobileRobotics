@@ -1,0 +1,31 @@
+TO describe systems that contain both continues dynamics (x_dot stuff) and the discrete switch logic that changes behavior.
+
+Hybrid Automata is finite state machines (discrete logic) with continuous dynaics inside each state
+
+As before, x is the continuous state of the system.
+Switching between different modes of operation is adding additional discrete states (q).
+
+This dynamics is expressed as
+x_dot = f_q(x,u)
+
+The transitions between different discreet modes can be encoded in a finite state machine. 
+A guard condition tells a system when it is time to transition. (essentially an if)
+if x \in G_y:
+  switch to state y
+
+We also want to allow for abrupt changes in continuous state as transitions occur (called a reset) to help accomodate for changing conditions. (e.g. robot senses less sunlight on its solar panels, so it switches to a low power mode where state has changed to use less energy)
+To make resets a little bit smoother, we sometimes include some "slack" in the guard check so that we aren't constantly switching back and forth between states.
+
+
+             G_avoid = x-x_obst < d
+            +----------------------+
+            |                      v  
++-----------+---------+       +----------------------+
+| x_dot = goToGoal(x) |       | x_dot = avoidObst(x) |
++---------------------+       +----+-----------------+            ^                      |
+            +----------------------+
+             G_goal = x-x_obst > d'
+
+
+These switch based hybrid systems can be very complicated with many different possible states and guards. 
+

@@ -1,0 +1,15 @@
+A sliding Mode Control can fix some instances of Type1 Zeno systems.
+
+For some target condition (represented by a line here) we want our system to slide along the line, maintaining the desired condition without going out into undesired behavior on either side of the line.
+
+ ∂g/∂x (gradient)    >
+   ^                /  f2                      g(x)>0
+   |               /
+---------------------------------------------  g(x)=0
+                   \
+                    \ f1                       g(x)<0
+                     >
+
+Sliding occurs if (∂g/∂x)f1 < 0  AND  (∂g/∂x)f2 > 0  
+aka deriv g in direction f=(∂g/∂x)f=Lfg (Lie deriv) is opposite directions for the 2 f's
+
