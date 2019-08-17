@@ -115,7 +115,7 @@ classdef GoToGoal < simiam.controller.Controller
             obj.p.plot_2d_ref(dt, atan2(sin(theta),cos(theta)), theta_g, 'r');
             
             outputs = obj.outputs;  % make a copy of the output struct
-            outputs.v = v / abs(1 + w);
+            outputs.v = v / abs(w);
             outputs.w = w;
         end
         

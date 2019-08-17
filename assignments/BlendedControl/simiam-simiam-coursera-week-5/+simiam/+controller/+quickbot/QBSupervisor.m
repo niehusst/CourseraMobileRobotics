@@ -88,7 +88,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
             obj.d_at_obs    = 0.25;                
             obj.d_unsafe    = 0.10;
             
-            obj.is_blending = true;
+            obj.is_blending = false;
             
             obj.p = simiam.util.Plotter();
             obj.current_controller.p = obj.p;
@@ -124,7 +124,17 @@ classdef QBSupervisor < simiam.controller.Supervisor
                 %% START CODE BLOCK %%
                 % implement hybrid controller
                 
-                obj.switch_to_state('stop');
+                if(obj.at_goal(obj.robot, obj.state_estimate))
+                    obj.switch_to_state('stop')
+                else
+                    if(obj.unsafe(obj.robot, obj.state_estimate))
+                        obj.switch_to_state('avoid_obstacles');
+                    elseif(obj.at_obstacle(obj.robot, obj.state_estimate))
+                        obj.switch_to_state('ao_and_gtg');
+                    else
+                        obj.switch_to_state('go_to_goal');
+                    end
+                end
                 
                 %% END CODE BLOCK %%
             end
