@@ -1,0 +1,6 @@
+How do you know when you need to introduce another behavior in order to act well in an environment?
+
+Obstacles that are points or circles can be dealt with by simple switching behavior.
+
+Convex, non-convex, and labrynth obstacles require an additional sliding mode in order for the robot to be able to get around obstacles that require a robot to go in a direction that is not even slightly in the direction of the goal.
+To get around these obstacles, wall/boundary following is necessary.

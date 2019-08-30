@@ -1,0 +1,15 @@
+Key behaviors in any navigation system are the ability to go to a desired location and to be able to avoid obstacles while doing so.
+
+An issue with simple linear go-to-goal controllers is that they (if implemented as simply as possible) will lead to a larger directional vector the further from the goal they are. To resolve this, we just change the dynamics of the system to keep a constant velocity;
+e_dot = -K*e  =>
+
+e_dot = -K*(||e||)*e
+K = v_0 * (1 - e^(-a*||e||^2)) / ||e||
+
+
+A simple avoid obstacles behavior can be implemented by a simple flip of gtg behavior (pretending obstacle is goal)
+e_dot = K*(||e||)*e   #notice K now positive
+K = (1/||e||) * (c / (||e||^2 + epsillon))
+
+  The epsillon prevents the behavior from going to infinity when ||e|| == 0
+

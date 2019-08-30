@@ -1,0 +1,9 @@
+In order to make our theoretical hybird automata system actualy work in real life, we need to fix it to stop treating obstacles as points, and instead as continuous objects instead.
+We also need to make the guards on the behavior conditions FAT, so that its not impossible to hit an exact equals condition (instead using a buffer zone)
+
+
+To deal with sensor information from a large obstacle (instead of a point) we can take the sum of the weighted obstacles vectors (the closest detected obstacles being weighed greater and also weighing obstacles not in our way to the goal less heavily) 
+
+Fat guards help make a ride smoother and avoid zeno conditions.
+
+Lastly, it is VERY important to test the system A LOT and tweak parameters to get the best performance.

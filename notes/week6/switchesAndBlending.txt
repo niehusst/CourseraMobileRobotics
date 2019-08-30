@@ -1,0 +1,26 @@
+Given some behaviors, how should they be combined? Using hard switching or blending???
+
+--------SWITCHING-----------
+- pros
+performance guarentees in each behavior
+can be smoothed by adding an induced mode
+
+- cons
+bumpy ride w/o induced mode
+possibility of zeno
+
+---------BLENDING-----------
+- pros
+smoother ride, no sudden switching
+no zeno possibilty
+
+- cons
+no guarentee that system does both things we intended
+
+
+
+
+a standard way of blending behaviors (using vector dynamics) is 
+
+sigma = 1 - e^(-B*d_0)
+u = behavior1 + sigma*behavior2

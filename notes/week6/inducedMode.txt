@@ -1,0 +1,17 @@
+The wall-following behavior can be described as
+u_wall = a*R*(±π/2) * u_avoid_obst
+where R is the rotation matrix (for going cw or ccw)
+
+The induced mode equation could be used to compute 'a' and the sign of π/2 in the u_wall equation, but that's messy, so we usually just pick a value for a and use the inner product test to choose the sign.
+We want to continue following the wall until it is safe to go directly towards to goal again.
+
+You should start going to the goal again when the robot is both closer to the goal than when it started sliding and when there is a clear shot to the goal.
+
+The gaurd switch for exiting the induced sliding mode should mathematically be:
+||x-x_g|| < ||x(t)-x_g||   #curr pos < slide strt pos
+u_ao^T * u_gtg > 0
+
+Often, just to guarentee a robot doesnt crash into things while sliding at a constant ∆ from the wall, we add in a pure obstacle avoidance beahvior into the robot control system too, if the distance from the the obstacle is ever less than ∆ (exitted as soon as distance is ∆ again)
+
+Last of all, dont' forget to add a mode that handles actually arriving at the destination.
+

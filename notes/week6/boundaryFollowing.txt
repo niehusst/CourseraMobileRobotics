@@ -1,0 +1,11 @@
+Boundary following is the behavior of maintaining a constant distance to the obstacle/wall it is following.
+
+A wall following vector can be calculated as a 90 degree rotation of the avoid-obstacles vector.
+But which way should the robot go? There is no way to know what the best way from local information, so generally the gtg behavior will push the decision in 1 direction by finding the smaller of the angle between gtg vector and the wall-follow vector and turning in that direction.
+
+We just take the inner product of gtg and wall-follow_clockwise, if its positive, turn clockwise. If inner product with wall-follow_counterclockwise is positive turn cc.
+
+inner prod u_ao, u_gtg ==
+u_ao(transposed) * u_gtg
+
+But when do we switch away from the wall following mode? we dont want to just continue following the wall forever.
