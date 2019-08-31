@@ -81,12 +81,22 @@ classdef FollowWall < simiam.controller.Controller
             % 1. Select p_2 and p_1, then compute u_fw_t
             if(strcmp(inputs.direction,'right'))
                 % Pick two of the right sensors based on ir_distances
-                p_1 = ir_distances_wf(:,4);
-                p_2 = ir_distances_wf(:,5);
+                ir_temp = ir_distances;
+                ir_temp(1:2) = NaN; % prevent left side sensors from affecting
+                p_1 = ir_distances_wf(:,5);
+                ir_temp(1) = NaN;
+                %find other sensor that is closest
+                [~ ,i] = min(ir_temp,[],'omitnan');
+                p_2 = ir_distances_wf(:,i);
             else
                 % Pick two of the left sensors based on ir_distances
+                ir_temp = ir_distances;
+                ir_temp(4:5) = NaN; %prevent right side sensors from affecting
                 p_1 = ir_distances_wf(:,1);
-                p_2 = ir_distances_wf(:,2);
+                ir_temp(1) = NaN;
+                %find other sensor that is closest
+                [~ ,i] = min(ir_temp,[],'omitnan');
+                p_2 = ir_distances_wf(:,i);
             end
             
             u_fw_t = p_2 - p_1; %convert sensor vectors into vec paralell to wall
