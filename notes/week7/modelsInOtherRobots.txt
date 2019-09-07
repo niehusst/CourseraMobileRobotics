@@ -1,0 +1,44 @@
+Is the unicycle approximation useful for other robot classes other than differential drive?
+
+Unicycle:
+x_dot = v*cos(phi)
+y_dot = v*sin(phi)
+phi_dot = w
+States; position and orientation
+Inputs; angular and translational velocity
+
+Car-like:
+x_dot = v*cos(phi+psi)
+y_dot = v*sin(phi+psi)
+phi_dot = v/l * sin(psi)
+psi_dot = u
+states; position, orientation, steering angle
+inputs; translational vel, steering angular vel
+
+Segway:
+unicycle + pendulum
+States; position, orientation, tilt-angle, velocities
+inputs; wheel torques
+
+fixed-wing aircraft / underwater glider;
+x_dot = v*cos(phi)
+y_dot = v*sin(phi)
+phi_dot = w
+z_dot = u   #altitude/depth
+State; position, orientation, altitude
+inputs; tanslational, angular, vertical vel
+
+
+Almost every robot has some similarity to unicycle models. Every robot has a POSE (x,y,phi) which is the simple dynamics of a unicycle.
+
+Essentially, we only need to have a layer that can translate between the unicycle dynamics to the real dynamics of the robot in order to use the unicycle model. 
+This may involve adding some constraints to the unicycle model;
+v = 1,  w \in [-1, 1]
+
+This particular constraint is the Dubins constraint.
+
+
+However, there are some robots where unicycle pose is not a good model;
+- humanoids
+- snakes
+- mobile manipulators

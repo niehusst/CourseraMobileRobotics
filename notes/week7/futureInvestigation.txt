@@ -1,0 +1,8 @@
+Not covered:
+
+non-linear control
+optimal control
+machine learning
+perception & mapping surroundings
+high level AI path planning
+

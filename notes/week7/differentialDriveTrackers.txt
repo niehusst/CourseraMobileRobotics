@@ -1,0 +1,8 @@
+A layered architecture allows us to use x_dot=u as approximation for our robot model on the intermediary planning level while translating to the actual robot model (e.g. differential drive) on the lowest level of execution.
+
+To build a tracker, for planned references, we can find the desired direction from input desired goal point. u = [u1, u2];
+phi = atan(u2/u1)
+
+and the velocity is
+v = sqrt(u1^2 + u2^2)
+

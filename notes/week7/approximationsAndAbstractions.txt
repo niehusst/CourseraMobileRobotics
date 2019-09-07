@@ -1,0 +1,8 @@
+How do we make our theoretical models fit into the real world robots?
+
+Assumptions:
+In the dynamics, we assumed that x_dot=u (point mass)
+Sensors are perfect
+
+The assumptions about the dynamics is very wrong a lot of the time, especially since we are using a unicycle robot.
+We need to create a system of conversions between our approximation with a pointmass to a real unicycle, differential drive.

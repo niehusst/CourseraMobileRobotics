@@ -1,0 +1,34 @@
+There is a helpful trick for using unicycle models with a differential drive robot and relating the dynamics without a layered architecture.
+
+In the past, we've picked the point right between the wheels of the differential drive robot to treat as the center for the unicycle model. But what if we pick a point just a little bit further along the robot (some distance l)? and what if we just ignored heading?
+
+old dynamics
+x_dot = v*cos(phi)
+y_dot = v*sin(phi)
+phi_dot = w
+
+new dynamics
+x_dot~ = x_dot + l*phi_dot*cos(phi)
+       = v*cos(phi) - l*w*sin(phi)
+y_dot~ = y_dot + l*phi_dot*sin(phi)
+       = v*sin(phi) + l*w*cos(phi)
+
+
+Now if we assume we can control this new point directly, we can say
+u1 = x_dot~
+u2 = y_dot~
+==>
+[[ u1 ]  =  [[ cos(phi) -sin(phi) ] * [[  v ]
+ [ u2 ]]     [ sin(phi)  cos(phi) ]]   [ lw ]]
+         = R(phi) * [[ 1 0 ] * [[ v ]
+                     [ 0 l ]    [ w ]]
+
+And v and w is all we need for the unicycle model! 
+[[ v ]  = [[ 1   0  ]  * R(-phi) * [[ u1 ]
+ [ w ]]    [ 0  1/l ]]              [ u2 ]]
+
+With this equation, we can convert directly from a planned u1 and u2 to the desired v,w for the unicycle without any layers of abstraction or approximations.
+All the information is known at execution time, and we get to choose the value for l. (l should be very small to make it a good approximation for a real unicycle. But if it's too small, the robot will be very jerky)
+
+And to convert from unicycle to the differential drive velocities required by our phyisical robot is to use the transformation equations from week2.
+

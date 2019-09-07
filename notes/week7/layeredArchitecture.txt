@@ -1,0 +1,17 @@
+Our problem is that even with our simple robot model (not to mention a more complex one), the navigation architecture becomes complicated.
+We want to find a way to reuse the simplified robot model with more realistic robot models.
+
+Standard nav systems in robots have 3 levels:
+Strategic level: where do we go (high level/long term)
+where should intermediary goal points be? 
+(Often uses AI, and/or graph planning. eg A*)
+
+Operational level: where to go (low level/short term)
+Which direction should we move between goal points?
+
+Tactical level: how to get to that point
+How to make our specific robot model (e.g. unicycle) get to another location. Control design.
+
+
+Having a layered architecture like this allows us to separate our robots inteligence into different modules to handle different aspects of path planning.
+

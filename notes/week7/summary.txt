@@ -1,0 +1,25 @@
+The course goals:
+robot navigation using control theory
+bridge theory-practice gap (do the hw)
+
+models are necessary to predict/approximate behavior
+  (make models as simple as possible)
+control feedback; change behavior based on environment
+stability of models
+abstract architectures
+
+
+________course in nutshell_________
+
+dynamical systems as model for motion
+They can be solved/tested using a initial point and the continuous equation
+
+The dynamic drive robot model and the unicycle model can be related using simple conversion between the states of each model using conversions 
+
+a model can be described usinga linear system (of matrices) that model the state of the robot, and adjust the the state based on the feedback
+
+the model must be controlable, stable. 
+
+hybrid automata can be used to let a robot change behavior.
+
+We must be careful to watchout for zeno and edgecases when designing hybrid models with many behaviors

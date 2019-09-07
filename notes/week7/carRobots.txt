@@ -1,0 +1,37 @@
+How do we make a car look like a unicycle?
+
+Where phi is the angle between 0 and the direction of the car's body, psi is angle between phi and the angle of the steering (front wheels). l is the distance between the front and back axis. w is the angular steering velocity.
+
+x_dot = v*cos(phi + psi)
+y_dot = v*sin(phi + psi)
+phi_dot = v/l * sin(psi)
+psi_dot = o
+
+States are x,y,psi,phi
+inputs are o,v
+
+
+To make this look like the unicycle model, we need som e curvcature control. 
+
+The curvature in a unicycle can be expressed with 
+p = v/w
+where p is the radius of the turn. Curvature is;
+K = w/v
+
+In a car robot;
+x_dot = p*(phi_dot + psi_dot)*cos(phi + psi)
+  we know that phi_dot = v/l * sin(psi),  psi_dot = 0
+  we also know that we want it to match our unicycle
+  = v*cos(phi + psi), so it must be that
+p = l / sin(psi)
+The curvature is just the inversion.
+
+To relate them, we just set the curvatures equal and solve for psi.
+w/v = sin(psi)/l
+sin(psi) = wl/v
+psi = arcsin(wl/v)  #our desired steering angle
+
+arcsin can be gross, so as long as we know that psi wont change much between dt, sin(psi) ~= psi
+
+So we can approximate to our input, o;
+o = C(wl/v - sin(psi))
