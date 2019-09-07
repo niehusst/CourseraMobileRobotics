@@ -22,5 +22,5 @@ no guarentee that system does both things we intended
 
 a standard way of blending behaviors (using vector dynamics) is 
 
-sigma = 1 - e^(-B*d_0)
-u = behavior1 + sigma*behavior2
+sigma = e^(-B*d_0)
+u = sigama*behavior1 + (1-sigma)*behavior2
