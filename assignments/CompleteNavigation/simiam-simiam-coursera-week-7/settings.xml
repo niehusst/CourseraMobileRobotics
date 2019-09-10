@@ -1,4 +1,4 @@
-<simulation>
+<simulation><!-- pose adjustment of 0 to every relevant object -->
     <app type="ControlApp" />
     
     <robot type="QuickBot">

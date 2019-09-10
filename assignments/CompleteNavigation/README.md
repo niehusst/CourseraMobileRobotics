@@ -1,5 +1,7 @@
 # Assignment 6
 This week you will be combining the go-to-goal, avoid-obstacles, and follow-wall controllers into a full navigation system for the robot. The robot will be able to navigate around a cluttered, complex environment without colliding with any obstacles and reaching the goal location successfully.
+It is also required to create a new finite state machine to handle the hybrid behaviors; the old hybrid automata from before will not be sufficient.
+Dont forget buffers for preventing Zeno.
 
 1. Implement the progress_made event that will determine whether the robot is making any progress towards the goal.
 2. Implement the sliding_left and sliding_right events that will serve as a criterion for whether the robot should continue to follow the wall (left or right) or switch back to the go-to-goal behavior.

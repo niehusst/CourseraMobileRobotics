@@ -59,7 +59,7 @@ classdef AvoidObstacles < simiam.controller.Controller
             
             % 1. Compute the heading vector for obstacle avoidance
             
-            sensor_gains = [1 1 0.5 1 1];
+            sensor_gains = [3 2 1 2 3];
             u_i = (ir_distances_wf-repmat([x;y],1,5))*diag(sensor_gains);
             u_ao = sum(u_i,2);
             

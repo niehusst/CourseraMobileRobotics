@@ -100,12 +100,12 @@ classdef QBSupervisor < simiam.controller.Supervisor
             
             %% START CODE BLOCK %%
             obj.v           = 0.15;
-            obj.goal        = [1.1, 1.1];
+            obj.goal        = [1.1, 1.1];   %goal location
             obj.d_stop      = 0.05;
-            obj.d_at_obs    = 0.10;                
+            obj.d_at_obs    = 0.10;  %should be LESS than d_fw (otherwise fw will never be escaped)             
             obj.d_unsafe    = 0.05;
             
-            obj.d_fw        = 0.15;
+            obj.d_fw        = 0.2;
             obj.fw_direction   = 'left';
             %% END CODE BLOCK %%
                                     
@@ -134,15 +134,98 @@ classdef QBSupervisor < simiam.controller.Supervisor
             
             %% START CODE BLOCK %%
             
-            ir_distances = obj.robot.get_ir_distances();
+            ir_distances = obj.robot.get_ir_distances(); %TODO use to determine which way to turn at wall?
             
-            if (obj.check_event('at_goal'))
-                if (~obj.is_in_state('stop'))
-                    [x,y,theta] = obj.state_estimate.unpack();
-                    fprintf('stopped at (%0.3f,%0.3f)\n', x, y);
+            % hybrid state automata controller
+            if(obj.check_event('at_goal'))
+                obj.switch_to_state('stop')
+            else
+                if(obj.check_event('unsafe'))
+                    obj.switch_to_state('avoid_obstacles');
                 end
-                obj.switch_to_state('stop');
+                
+                % more complicated hybrid state control
+                if(obj.is_in_state('avoid_obstacles'))
+                    %% ao state exits 
+                    if(~obj.check_event('unsafe'))
+                        if(~obj.check_event('sliding_left') && ...
+                                ~obj.check_event('sliding_right'))
+                            % dont need to follow wall
+                            obj.switch_to_state('ao_and_gtg');
+                        else
+                            % choose direction to follow in
+                            if(obj.check_event('sliding_left'))
+                                obj.fw_direction = 'left';
+                            else
+                                obj.fw_direction = 'right';
+                            end
+                            obj.switch_to_state('follow_wall');
+                            % mark initial progress
+                            obj.set_progress_point();
+                        end
+                    end
+                elseif(obj.is_in_state('follow_wall'))
+                    %% induced mode exits
+                    if(obj.check_event('progress_made') && ...
+                            ~obj.check_event('sliding_left') && ...
+                            ~obj.check_event('sliding_right')) %is this getting passed?
+                        % no longer need to slide
+                        fprintf('SWITCHING OUT OF FW\n');
+                        obj.switch_to_state('ao_and_gtg');
+                        %obj.switch_to_state('go_to_goal');
+                    end
+                elseif(obj.is_in_state('go_to_goal'))
+                    %% gtg state exits
+                    if(obj.check_event('at_obstacle'))
+                        if(~obj.check_event('sliding_left') && ...
+                                ~obj.check_event('sliding_right'))
+                            % at obs but no need to slide (seems unlikely?)
+                            obj.switch_to_state('ao_and_gtg');
+                        elseif(obj.check_event('sliding_left'))
+                            % choose sliding direction for wall following
+                            obj.fw_direction = 'left';
+                            obj.switch_to_state('follow_wall');
+                            % mark initial progress
+                            obj.set_progress_point();
+                        elseif(obj.check_event('sliding_right'))
+                            obj.fw_direction = 'right';
+                            obj.switch_to_state('follow_wall');
+                            % mark initial progress
+                            obj.set_progress_point();
+                        else
+                            % couldn't choose direction, go to blend
+                            obj.switch_to_state('ao_and_gtg')
+                        end
+                    end
+                elseif(obj.is_in_state('ao_and_gtg'))
+                    %% blended state exits
+                    if(obj.check_event('obstacle_cleared'))
+                        % no longer near an obstacles, switch to guaranteed
+                        % behavior
+                        obj.switch_to_state('go_to_goal');
+                    else
+                        % wall following may be required; choose direction
+                        if(obj.check_event('sliding_left'))
+                            obj.fw_direction = 'left';
+                            obj.switch_to_state('follow_wall');
+                            % mark initial progress
+                            obj.set_progress_point();
+                        elseif(obj.check_event('sliding_right'))
+                            obj.fw_direction = 'right';
+                            obj.switch_to_state('follow_wall');
+                            % mark initial progress
+                            obj.set_progress_point();
+                        else
+                            % wall following direction unchoosable? just
+                            % avoid
+                            obj.switch_to_state('avoid_obstacles')
+                        end
+                    end
+                else
+                    fprintf("Impossible mode!\n");
+                end
             end
+            
             
             %% END CODE BLOCK %%
             
@@ -177,11 +260,13 @@ classdef QBSupervisor < simiam.controller.Supervisor
                         
             %% START CODE BLOCK %%
             sigma = [0;0];
+            sigma(1) = (u_fw(1) - (u_ao(1)*(u_fw(2)-u_gtg(2))/u_ao(2))) / u_gtg(1);
+            sigma(2) = (u_fw(2) - sigma(1)*u_gtg(2)) / u_ao(2);
             %% END CODE BLOCK %%
 
             rc = false;
             if sigma(1) > 0 && sigma(2) > 0
-%                 fprintf('now sliding left\n');
+                fprintf('now sliding left\n');
                 rc = true;
             end
         end
@@ -199,12 +284,14 @@ classdef QBSupervisor < simiam.controller.Supervisor
             u_fw = obj.controllers{7}.u_fw;
             
             %% START CODE BLOCK
-            sigma = [0;0];
+            sigma = [1;1];
+            sigma(1) = (u_fw(1) - (u_ao(1)*(u_fw(2)-u_gtg(2))/u_ao(2))) / u_gtg(1);
+            sigma(2) = (u_fw(2) - sigma(1)*u_gtg(2)) / u_ao(2);
             %% END CODE BLOCK
             
             rc = false;
             if sigma(1) > 0 && sigma(2) > 0
-%                 fprintf('now sliding right\n');
+                fprintf('now sliding right\n');
                 rc = true;
             end
         end
@@ -216,8 +303,11 @@ classdef QBSupervisor < simiam.controller.Supervisor
             rc = false;
             
             %% START CODE BLOCK %%
-            
-            if (1+1==2)
+            % determine if the robot has made it any closer to the
+            % goal
+            goal_dif = sqrt((x-obj.goal(1))^2 + (y-obj.goal(2))^2);%norm([x-obj.goal(1);y-obj.goal(2)]);
+            epsilon = 0.1;
+            if (obj.d_prog-epsilon > goal_dif)
                 rc = true;
             end
             
@@ -237,7 +327,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
         
         function rc = at_obstacle(obj, state, robot)
             ir_distances = obj.robot.get_ir_distances();
-            rc = false;                                     % Assume initially that the robot is clear of obstacle
+            rc = false; % Assume initially that the robot is clear of obstacle
             
             % Loop through and test the sensors (only the front set)
             if any(ir_distances(1:5) < obj.d_at_obs)
@@ -247,7 +337,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
         
         function rc = unsafe(obj, state, robot)
             ir_distances = obj.robot.get_ir_distances();              
-            rc = false;             % Assume initially that the robot is clear of obstacle
+            rc = false;   % Assume initially that the robot is clear of obstacle
             
             % Loop through and test the sensors (only the front set)
             if any(ir_distances(1:5) < obj.d_unsafe)
@@ -257,7 +347,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
         
         function rc = obstacle_cleared(obj, state, robot)
             ir_distances = obj.robot.get_ir_distances();
-            rc = false;              % Assume initially that the robot is clear of obstacle
+            rc = false;  % Assume initially that the robot is clear of obstacle
             
             % Loop through and test the sensors (only front set)
             if all(ir_distances(1:5) > obj.d_at_obs)
@@ -280,14 +370,17 @@ classdef QBSupervisor < simiam.controller.Supervisor
             vel_max = robot.max_vel;
             vel_min = robot.min_vel;
             
-%             fprintf('IN (v,w) = (%0.3f,%0.3f)\n', v, w);
+            max_w = (R/L)*(vel_max-vel_min);
+            v = (1 - abs(w)/max(abs(w),max_w))*v;  %scale v by w so that robot slows the more it has to turn
+            
+            %fprintf('IN  (v,w) = (%0.3f,%0.3f)\n', v, w);
             
             if (abs(v) > 0)
                 % 1. Limit v,w to be possible in the range [vel_min, vel_max]
                 % (avoid stalling or exceeding motor limits)
                 v_lim = max(min(abs(v), (R/2)*(2*vel_max)), (R/2)*(2*vel_min));
                 w_lim = max(min(abs(w), (R/L)*(vel_max-vel_min)), 0);
-                
+                %fprintf('MID0 (v,w) = (%0.3f,%0.3f)\n', v_lim, w_lim);
                 % 2. Compute the desired curvature of the robot's motion
                 
                 [vel_r_d, vel_l_d] = robot.dynamics.uni_to_diff(v_lim, w_lim);
@@ -300,9 +393,12 @@ classdef QBSupervisor < simiam.controller.Supervisor
                 if (vel_rl_max > vel_max)
                     vel_r = vel_r_d - (vel_rl_max-vel_max);
                     vel_l = vel_l_d - (vel_rl_max-vel_max);
+                    %fprintf('MID1 (v,w) = (%0.3f,%0.3f)\n', v_lim, w_lim);
                 elseif (vel_rl_min < vel_min)
                     vel_r = vel_r_d + (vel_min-vel_rl_min);
                     vel_l = vel_l_d + (vel_min-vel_rl_min);
+                    %fprintf('MID2 (v,w) = (%0.3f,%0.3f)\n', v_lim, w_lim);
+                    % THIS IS BREAKING?
                 else
                     vel_r = vel_r_d;
                     vel_l = vel_l_d;
@@ -329,7 +425,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
                 
             end
             
-%             fprintf('OUT (v,w) = (%0.3f,%0.3f)\n', v, w);
+            %fprintf('OUT (v,w) = (%0.3f,%0.3f)\n', v, w);
             [vel_r, vel_l] = robot.dynamics.uni_to_diff(v, w);
         end
         
